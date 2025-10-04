@@ -1,59 +1,48 @@
 import { Stack } from 'expo-router';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
-import { Menu } from 'lucide-react-native';
-import { useState } from 'react';
-import CustomSidebar from '../../components/CustomSidebar';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../../src/context/ThemeContext';
 
 export default function MainLayout() {
-  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const { currentTheme } = useTheme();
+  const colors = currentTheme.colors;
 
   return (
-    <View style={styles.container}>
-      <Stack
-        screenOptions={{
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: '#ffffff',
-          },
-          headerShadowVisible: false,
-          headerTintColor: '#111827',
-          headerTitleStyle: {
-            fontWeight: '600',
-            fontSize: 18,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => setSidebarVisible(true)}
-              style={styles.menuButton}
-            >
-              <Menu size={24} color="#111827" />
-            </TouchableOpacity>
-          ),
-        }}
-      >
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerTitle: 'Inicio',
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: colors.background.card,
+            },
+            headerShadowVisible: false,
+            headerTintColor: colors.text.primary,
+            headerTitleStyle: {
+              fontWeight: '600',
+              fontSize: 18,
+            },
           }}
-        />
-      </Stack>
-
-      <CustomSidebar
-        visible={sidebarVisible}
-        onClose={() => setSidebarVisible(false)}
-        onNavigate={(action) => {
-          console.log('Navigate to:', action);
-        }}
-      />
-    </View>
+        >
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerTitle: '',
+              headerShown: false,
+            }}
+          />
+        </Stack>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   menuButton: {
     marginLeft: 16,

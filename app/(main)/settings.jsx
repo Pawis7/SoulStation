@@ -1,10 +1,19 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { useState } from 'react';
-import { User, Bell, Lock, Palette, Globe, HelpCircle, ChevronRight } from 'lucide-react-native';
+import { User, Bell, Lock, Palette, Globe, HelpCircle, ChevronRight, ArrowLeft } from 'lucide-react-native';
+import { useTheme } from '../../src/context/ThemeContext';
+import ThemeSelector from '../../components/ThemeSelector';
+import { router } from 'expo-router';
 
 export default function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
+  const { currentTheme } = useTheme();
+  const colors = currentTheme.colors;
+
+  const handleBackPress = () => {
+    router.back();
+  };
 
   const settingsSections = [
     {
@@ -28,10 +37,10 @@ export default function SettingsScreen() {
         {
           id: 4,
           icon: Palette,
-          label: 'Modo oscuro',
-          hasSwitch: true,
-          value: darkModeEnabled,
-          onToggle: setDarkModeEnabled
+          label: 'Tema de la aplicación',
+          subtitle: currentTheme.name,
+          hasArrow: true,
+          onPress: () => setThemeModalVisible(true)
         },
         { id: 5, icon: Globe, label: 'Idioma', subtitle: 'Español', hasArrow: true },
       ],
@@ -45,34 +54,42 @@ export default function SettingsScreen() {
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
+      {/* Header con flecha de regreso */}
+      <View style={[styles.navHeader, { backgroundColor: colors.background.card, borderBottomColor: colors.border.light }]}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+          <ArrowLeft size={24} color={colors.text.primary} strokeWidth={2} />
+        </TouchableOpacity>
+        <Text style={[styles.navTitle, { color: colors.text.primary }]}>Ajustes</Text>
+        <View style={styles.placeholder} />
+      </View>
+
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Ajustes</Text>
-        </View>
 
         {settingsSections.map((section, index) => (
           <View key={index} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            <View style={styles.sectionContent}>
+            <Text style={[styles.sectionTitle, { color: colors.text.tertiary }]}>{section.title}</Text>
+            <View style={[styles.sectionContent, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
               {section.items.map((item, itemIndex) => (
                 <TouchableOpacity
                   key={item.id}
                   style={[
                     styles.settingItem,
+                    { borderBottomColor: colors.border.light },
                     itemIndex === section.items.length - 1 && styles.settingItemLast,
                   ]}
                   activeOpacity={item.hasSwitch ? 1 : 0.7}
                   disabled={item.hasSwitch}
+                  onPress={item.onPress}
                 >
                   <View style={styles.settingLeft}>
-                    <View style={styles.iconContainer}>
-                      <item.icon size={20} color="#6b7280" strokeWidth={2} />
+                    <View style={[styles.iconContainer, { backgroundColor: colors.background.tertiary }]}>
+                      <item.icon size={20} color={colors.text.secondary} strokeWidth={2} />
                     </View>
                     <View style={styles.settingTextContainer}>
-                      <Text style={styles.settingLabel}>{item.label}</Text>
+                      <Text style={[styles.settingLabel, { color: colors.text.primary }]}>{item.label}</Text>
                       {item.subtitle && (
-                        <Text style={styles.settingSubtitle}>{item.subtitle}</Text>
+                        <Text style={[styles.settingSubtitle, { color: colors.text.tertiary }]}>{item.subtitle}</Text>
                       )}
                     </View>
                   </View>
@@ -81,12 +98,12 @@ export default function SettingsScreen() {
                       <Switch
                         value={item.value}
                         onValueChange={item.onToggle}
-                        trackColor={{ false: '#d1d5db', true: '#93c5fd' }}
-                        thumbColor={item.value ? '#3b82f6' : '#f3f4f6'}
+                        trackColor={{ false: colors.border.dark, true: colors.primary + '40' }}
+                        thumbColor={item.value ? colors.primary : colors.background.card}
                       />
                     )}
                     {item.hasArrow && (
-                      <ChevronRight size={20} color="#d1d5db" strokeWidth={2} />
+                      <ChevronRight size={20} color={colors.border.dark} strokeWidth={2} />
                     )}
                   </View>
                 </TouchableOpacity>
@@ -96,15 +113,20 @@ export default function SettingsScreen() {
         ))}
 
         <View style={styles.logoutSection}>
-          <TouchableOpacity style={styles.logoutButton} activeOpacity={0.7}>
-            <Text style={styles.logoutText}>Cerrar sesión</Text>
+          <TouchableOpacity style={[styles.logoutButton, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]} activeOpacity={0.7}>
+            <Text style={[styles.logoutText, { color: colors.status.error }]}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Versión 1.0.0</Text>
+          <Text style={[styles.footerText, { color: colors.text.tertiary }]}>Versión 1.0.0</Text>
         </View>
       </ScrollView>
+
+      <ThemeSelector
+        visible={themeModalVisible}
+        onClose={() => setThemeModalVisible(false)}
+      />
     </View>
   );
 }
@@ -112,36 +134,40 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
+  },
+  navHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  backButton: {
+    padding: 8,
+  },
+  navTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  placeholder: {
+    width: 40,
   },
   content: {
-    paddingBottom: 40,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
     paddingBottom: 20,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#111827',
   },
   section: {
-    marginTop: 24,
+    marginTop: 16,
   },
   sectionTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#6b7280',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     paddingHorizontal: 20,
     marginBottom: 8,
   },
   sectionContent: {
-    backgroundColor: '#ffffff',
     marginHorizontal: 16,
     borderRadius: 12,
     overflow: 'hidden',
@@ -158,7 +184,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
   },
   settingItemLast: {
     borderBottomWidth: 0,
@@ -172,7 +197,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 8,
-    backgroundColor: '#f9fafb',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -183,11 +207,9 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#111827',
   },
   settingSubtitle: {
     fontSize: 13,
-    color: '#9ca3af',
     marginTop: 2,
   },
   settingRight: {
@@ -195,10 +217,9 @@ const styles = StyleSheet.create({
   },
   logoutSection: {
     paddingHorizontal: 16,
-    marginTop: 32,
+    marginTop: 24,
   },
   logoutButton: {
-    backgroundColor: '#ffffff',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -211,14 +232,12 @@ const styles = StyleSheet.create({
   logoutText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ef4444',
   },
   footer: {
     alignItems: 'center',
-    marginTop: 32,
+    marginTop: 24,
   },
   footerText: {
     fontSize: 13,
-    color: '#9ca3af',
   },
 });
