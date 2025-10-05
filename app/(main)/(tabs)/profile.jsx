@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Edit3, Mail, Phone, Calendar, Settings, HelpCircle } from 'lucide-react-native';
+import { Edit3, Mail, Phone, Calendar, Settings, HelpCircle, Bot } from 'lucide-react-native';
 import { useTheme } from '../../../src/context/ThemeContext';
 import { router } from 'expo-router';
 
@@ -15,20 +15,29 @@ export default function Profile() {
 
   const profileActions = [
     { id: 1, icon: Edit3, label: 'Editar perfil', color: colors.primary },
-    { id: 2, icon: Mail, label: 'Contactar', color: colors.status.success },
+    { id: 2, icon: Bot, label: 'Chat IA', color: colors.secondary },
   ];
 
   const handleSettingsPress = () => {
-    router.push('/settings');
+    router.push('/(main)/settings');
   };
 
   const handleHelpPress = () => {
-    router.push('/help');
+    router.push('/(main)/help');
+  };
+
+  const handleActionPress = (actionId) => {
+    switch (actionId) {
+      case 2:
+        router.push('/(main)/chatBot');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
-      {/* Header estilo Instagram */}
       <View style={[styles.header, { backgroundColor: colors.background.card, borderBottomColor: colors.border.light }]}>
         <View style={styles.headerContent}>
           <Text style={[styles.username, { color: colors.text.primary }]}>Juan Díaz</Text>
@@ -106,6 +115,7 @@ export default function Profile() {
                 key={action.id}
                 style={[styles.actionCard, { backgroundColor: colors.background.card }]}
                 activeOpacity={0.7}
+                onPress={() => handleActionPress(action.id)}
               >
                 <View style={[styles.actionIcon, { backgroundColor: action.color + '15' }]}>
                   <action.icon size={22} color={action.color} strokeWidth={2} />
@@ -131,7 +141,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 24,
     paddingBottom: 20,
-    borderBottomWidth: 1,
   },
   headerContent: {
     flexDirection: 'row',

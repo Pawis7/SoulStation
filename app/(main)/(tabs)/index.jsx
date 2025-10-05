@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Sparkles, TrendingUp, Users, Zap } from 'lucide-react-native';
+import { Sparkles, TrendingUp, Users, Bot } from 'lucide-react-native';
 import { useTheme } from '../../../src/context/ThemeContext';
+import { router } from 'expo-router';
 
 export default function MainScreen() {
   const { currentTheme } = useTheme();
@@ -10,17 +11,65 @@ export default function MainScreen() {
     { id: 1, icon: Sparkles, label: 'Nuevo', color: colors.primary },
     { id: 2, icon: TrendingUp, label: 'Tendencias', color: colors.secondary },
     { id: 3, icon: Users, label: 'Comunidad', color: colors.accent },
-    { id: 4, icon: Zap, label: 'Rápido', color: colors.status.warning },
+    { id: 4, icon: Bot, label: 'ChatBot', color: colors.status.warning },
   ];
+
+  const extraCards = [
+    { 
+      id: 1, 
+      icon: Sparkles, 
+      title: 'Proyecto Demo', 
+      subtitle: 'Actualizado hace 2 horas',
+      color: colors.primary 
+    },
+    { 
+      id: 2, 
+      icon: TrendingUp, 
+      title: 'Estadísticas', 
+      subtitle: 'Actualizado hace 5 horas',
+      color: colors.secondary 
+    },
+    { 
+      id: 3, 
+      icon: Bot, 
+      title: 'ChatBot', 
+      subtitle: 'Actualizado hace 5 horas',
+      color: colors.status.warning 
+    },
+  ];
+
+  const handleActionPress = (actionId) => {
+    switch (actionId) {
+      case 4:
+        router.push('/(main)/chatBot');
+        break;
+      default:
+        // Manejar otras acciones
+        break;
+    }
+  };
+
+  const handleExtraCardPress = (cardId) => {
+    switch (cardId) {
+      case 1:
+        break;
+      case 3:
+        router.push('/(main)/chatBot');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.welcomeSection, { backgroundColor: colors.background.card }]}>
+
+      <View style={[styles.welcomeSection, { backgroundColor: colors.background.card }]}>
           <Text style={[styles.greeting, { color: colors.text.primary }]}>Hola de nuevo</Text>
           <Text style={[styles.subtitle, { color: colors.text.secondary }]}>¿Qué haremos hoy?</Text>
-        </View>
+      </View>
 
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.quickActionsContainer}>
           <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Acciones rápidas</Text>
           <View style={styles.actionsGrid}>
@@ -29,6 +78,7 @@ export default function MainScreen() {
                 key={action.id}
                 style={styles.actionCard}
                 activeOpacity={0.7}
+                onPress={() => handleActionPress(action.id)}
               >
                 <View style={[styles.actionIcon, { backgroundColor: action.color + '15' }]}>
                   <action.icon size={24} color={action.color} strokeWidth={2} />
@@ -41,35 +91,26 @@ export default function MainScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Recientes</Text>
-            <TouchableOpacity>
-              <Text style={[styles.seeAll, { color: colors.primary }]}>Ver todo</Text>
-            </TouchableOpacity>
+            <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Extras</Text>
           </View>
 
-          <View style={[styles.card, { backgroundColor: colors.background.card }]}>
-            <View style={styles.cardContent}>
-              <View style={[styles.cardIcon, { backgroundColor: colors.background.tertiary }]}>
-                <Sparkles size={20} color={colors.primary} strokeWidth={2} />
-              </View>
-              <View style={styles.cardTextContainer}>
-                <Text style={[styles.cardTitle, { color: colors.text.primary }]}>Proyecto Demo</Text>
-                <Text style={[styles.cardSubtitle, { color: colors.text.tertiary }]}>Actualizado hace 2 horas</Text>
-              </View>
+          {extraCards.map((card) => (
+            <View key={card.id} style={[styles.card, { backgroundColor: colors.background.card }]}>
+              <TouchableOpacity 
+                style={styles.cardContent}
+                activeOpacity={0.7}
+                onPress={() => handleExtraCardPress(card.id)}
+              >
+                <View style={[styles.cardIcon, { backgroundColor: colors.background.tertiary }]}>
+                  <card.icon size={20} color={card.color} strokeWidth={2} />
+                </View>
+                <View style={styles.cardTextContainer}>
+                  <Text style={[styles.cardTitle, { color: colors.text.primary }]}>{card.title}</Text>
+                  <Text style={[styles.cardSubtitle, { color: colors.text.tertiary }]}>{card.subtitle}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </View>
-
-          <View style={[styles.card, { backgroundColor: colors.background.card }]}>
-            <View style={styles.cardContent}>
-              <View style={[styles.cardIcon, { backgroundColor: colors.background.tertiary }]}>
-                <TrendingUp size={20} color={colors.secondary} strokeWidth={2} />
-              </View>
-              <View style={styles.cardTextContainer}>
-                <Text style={[styles.cardTitle, { color: colors.text.primary }]}>Estadísticas</Text>
-                <Text style={[styles.cardSubtitle, { color: colors.text.tertiary }]}>Actualizado hace 5 horas</Text>
-              </View>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -78,7 +119,7 @@ export default function MainScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
   },
   content: {
     paddingBottom: 100,
@@ -86,7 +127,7 @@ const styles = StyleSheet.create({
   welcomeSection: {
     paddingHorizontal: 20,
     paddingTop: 24,
-    paddingBottom: 28,
+    paddingBottom: 20,
   },
   greeting: {
     fontSize: 28,
