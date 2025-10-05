@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Sparkles, TrendingUp, Users, Bot } from 'lucide-react-native';
+import { TrendingUp, Users, Bot, Cross, Dumbbell } from 'lucide-react-native';
 import { useTheme } from '../../../src/context/ThemeContext';
 import { router } from 'expo-router';
 
@@ -8,39 +8,39 @@ export default function MainScreen() {
   const colors = currentTheme.colors;
 
   const quickActions = [
-    { id: 1, icon: Sparkles, label: 'Nuevo', color: colors.primary },
-    { id: 2, icon: TrendingUp, label: 'Tendencias', color: colors.secondary },
-    { id: 3, icon: Users, label: 'Comunidad', color: colors.accent },
-    { id: 4, icon: Bot, label: 'ChatBot', color: colors.status.warning },
+    { id: 1, icon: Cross, label: 'Mental Health', color: colors.primary },
+    { id: 2, icon: Dumbbell, label: 'Physical Health', color: colors.secondary },
+    { id: 3, icon: Bot, label: 'Wotteo, Your Virtual Friend', color: colors.status.warning },
+    { id: 4, icon: Users, label: 'Moments', color: colors.accent }
   ];
 
   const extraCards = [
     { 
       id: 1, 
-      icon: Sparkles, 
-      title: 'Proyecto Demo', 
-      subtitle: 'Actualizado hace 2 horas',
+      icon: Cross, 
+      title: 'Mental Health', 
+      subtitle: 'Updated 2 hours ago',
       color: colors.primary 
     },
     { 
       id: 2, 
       icon: TrendingUp, 
-      title: 'Estadísticas', 
-      subtitle: 'Actualizado hace 5 horas',
+      title: 'Statistics', 
+      subtitle: 'Updated 5 hours ago',
       color: colors.secondary 
     },
     { 
       id: 3, 
       icon: Bot, 
       title: 'ChatBot', 
-      subtitle: 'Actualizado hace 5 horas',
+      subtitle: 'Updated 5 hours ago',
       color: colors.status.warning 
     },
   ];
 
   const handleActionPress = (actionId) => {
     switch (actionId) {
-      case 4:
+      case 3:
         router.push('/(main)/chatBot');
         break;
       default:
@@ -65,13 +65,13 @@ export default function MainScreen() {
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
 
       <View style={[styles.welcomeSection, { backgroundColor: colors.background.card }]}>
-          <Text style={[styles.greeting, { color: colors.text.primary }]}>Hola de nuevo</Text>
-          <Text style={[styles.subtitle, { color: colors.text.secondary }]}>¿Qué haremos hoy?</Text>
+          <Text style={[styles.greeting, { color: colors.text.primary }]}>Welcome back</Text>
+          <Text style={[styles.subtitle, { color: colors.text.secondary }]}>What will we do today?</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.quickActionsContainer}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Acciones rápidas</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
             {quickActions.map((action) => (
               <TouchableOpacity
@@ -95,8 +95,9 @@ export default function MainScreen() {
           </View>
 
           {extraCards.map((card) => (
-            <View key={card.id} style={[styles.card, { backgroundColor: colors.background.card }]}>
-              <TouchableOpacity 
+            <View key={card.id} style={[styles.card, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
+
+              <TouchableOpacity
                 style={styles.cardContent}
                 activeOpacity={0.7}
                 onPress={() => handleExtraCardPress(card.id)}
@@ -119,7 +120,7 @@ export default function MainScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0,
+    flex: 1,
   },
   content: {
     paddingBottom: 100,
@@ -155,6 +156,8 @@ const styles = StyleSheet.create({
     width: '50%',
     paddingHorizontal: 6,
     marginBottom: 12,
+    shadowRadius: 2,
+    borderRadius: 12,
   },
   actionIcon: {
     width: '100%',

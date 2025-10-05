@@ -11,9 +11,9 @@ export default function Notifications() {
       type: 'message',
       icon: MessageCircle,
       color: colors.primary,
-      title: 'Nuevo mensaje',
-      description: 'Has recibido un mensaje de María García',
-      time: 'Hace 5 min',
+      title: 'New message',
+      description: 'You have received a message from Maria Garcia',
+      time: '5 min ago',
       isNew: true,
     },
     {
@@ -21,9 +21,9 @@ export default function Notifications() {
       type: 'team',
       icon: Users,
       color: colors.status.success,
-      title: 'Actualización del equipo',
-      description: 'Tu equipo ha completado el proyecto "App Mobile"',
-      time: 'Hace 1 hora',
+      title: 'Team update',
+      description: 'Your team has completed the "Mobile App" project',
+      time: '1 hour ago',
       isNew: true,
     },
     {
@@ -31,9 +31,9 @@ export default function Notifications() {
       type: 'achievement',
       icon: Star,
       color: colors.status.warning,
-      title: '¡Logro desbloqueado!',
-      description: 'Has completado 10 proyectos exitosamente',
-      time: 'Hace 2 horas',
+      title: 'Achievement unlocked!',
+      description: 'You have successfully completed 10 projects',
+      time: '2 hours ago',
       isNew: false,
     },
     {
@@ -41,9 +41,9 @@ export default function Notifications() {
       type: 'reminder',
       icon: Clock,
       color: colors.accent,
-      title: 'Recordatorio',
-      description: 'Reunión de equipo en 30 minutos',
-      time: 'Hace 3 horas',
+      title: 'Reminder',
+      description: 'Team meeting in 30 minutes',
+      time: '3 hours ago',
       isNew: false,
     },
     {
@@ -51,9 +51,9 @@ export default function Notifications() {
       type: 'update',
       icon: Zap,
       color: colors.status.error,
-      title: 'Actualización disponible',
-      description: 'Nueva versión de la app disponible para descargar',
-      time: 'Hace 1 día',
+      title: 'Update available',
+      description: 'New app version available for download',
+      time: '1 day ago',
       isNew: false,
     },
   ];
@@ -64,16 +64,16 @@ export default function Notifications() {
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
       <View style={[styles.header, { backgroundColor: colors.background.card }]}>
         <View>
-          <Text style={[styles.title, { color: colors.text.primary }]}>Notificaciones</Text>
+          <Text style={[styles.title, { color: colors.text.primary }]}>Notifications</Text>
           {unreadCount > 0 && (
-            <Text style={[styles.subtitle, { color: colors.text.secondary }]}>{unreadCount} nuevas notificaciones</Text>
+            <Text style={[styles.subtitle, { color: colors.text.secondary }]}>{unreadCount} new notifications</Text>
           )}
         </View>
         
         {unreadCount > 0 && (
           <TouchableOpacity style={[styles.markAllButton, { backgroundColor: colors.status.success + '15' }]}>
             <Check size={16} color={colors.status.success} strokeWidth={2} />
-            <Text style={[styles.markAllText, { color: colors.status.success }]}>Marcar todo</Text>
+            <Text style={[styles.markAllText, { color: colors.status.success }]}>Mark all</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -84,9 +84,9 @@ export default function Notifications() {
             <View style={[styles.emptyIcon, { backgroundColor: colors.background.tertiary }]}>
               <Bell size={48} color={colors.border.dark} strokeWidth={1.5} />
             </View>
-            <Text style={[styles.emptyTitle, { color: colors.text.secondary }]}>No hay notificaciones</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text.secondary }]}>No notifications</Text>
             <Text style={[styles.emptySubtitle, { color: colors.text.tertiary }]}>
-              Cuando recibas notificaciones, aparecerán aquí
+              When you receive notifications, they will appear here
             </Text>
           </View>
         ) : (
@@ -141,7 +141,7 @@ export default function Notifications() {
         <View style={styles.settingsSection}>
           <TouchableOpacity style={[styles.settingsButton, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
             <Bell size={20} color={colors.text.secondary} strokeWidth={2} />
-            <Text style={[styles.settingsText, { color: colors.text.secondary }]}>Configurar notificaciones</Text>
+            <Text style={[styles.settingsText, { color: colors.text.secondary }]}>Configure notifications</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

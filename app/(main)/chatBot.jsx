@@ -10,9 +10,11 @@ import {
   Platform,
   Alert,
   Keyboard,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
-import { Send, Bot, User, ArrowLeft } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Send, Bot, User, ArrowLeft, MoreVertical, Trash2 } from 'lucide-react-native';
 import { useTheme } from '../../src/context/ThemeContext';
 import { chatService, CHAT_CONFIG } from '../../src/services/chatService';
 import { router } from 'expo-router';
@@ -26,12 +28,105 @@ export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [conversationId, setConversationId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [screenHeight] = useState(Dimensions.get('window').height);
+  const [messageIdCounter, setMessageIdCounter] = useState(1000); // Contador para IDs únicos
+  const [showMenu, setShowMenu] = useState(false);
+  const [apiStatus, setApiStatus] = useState('unknown'); // 'connected', 'disconnected', 'unknown'
+  const [isInitializing, setIsInitializing] = useState(true); // Para mostrar estado inicial
+
+  const generateUniqueId = () => {
+    setMessageIdCounter(prev => prev + 1);
+    return `msg_${messageIdCounter}_${Date.now()}`;
+  };
+
+  // Verificar estado de conexión con la API
+  const checkApiConnection = async () => {
+    try {
+      const result = await chatService.testConnection();
+      const newStatus = result.success ? 'connected' : 'disconnected';
+      
+      // Solo actualizar si el estado cambió
+      setApiStatus(prevStatus => {
+        if (prevStatus !== newStatus) {
+          return newStatus;
+        }
+        return prevStatus;
+      });
+      
+      return result.success;
+    } catch (error) {
+      setApiStatus('disconnected');
+      return false;
+    }
+  };
+
+  // Función de guardado automático con AsyncStorage
+  const autoSaveConversation = async (updatedMessages) => {
+    try {
+      if (!conversationId || updatedMessages.length === 0) {
+        return;
+      }
+      
+      
+      const conversationData = {
+        id: conversationId,
+        messages: updatedMessages,
+        timestamp: new Date().toISOString(),
+        title: `Conversación del ${new Date().toLocaleDateString()}`,
+        lastMessage: updatedMessages[updatedMessages.length - 1]?.text?.substring(0, 50) + '...'
+      };
+      
+      // Guardar conversación específica
+      await AsyncStorage.setItem(`conversation_${conversationId}`, JSON.stringify(conversationData));
+      
+      // Actualizar lista de conversaciones
+      const existingConversations = await AsyncStorage.getItem('conversations_list');
+      let conversationsList = existingConversations ? JSON.parse(existingConversations) : [];
+      
+      // Actualizar o agregar conversación
+      const existingIndex = conversationsList.findIndex(conv => conv.id === conversationId);
+      const conversationSummary = {
+        id: conversationId,
+        title: conversationData.title,
+        lastMessage: conversationData.lastMessage,
+        timestamp: conversationData.timestamp,
+        messageCount: updatedMessages.length
+      };
+      
+      if (existingIndex !== -1) {
+        conversationsList[existingIndex] = conversationSummary;
+      } else {
+        conversationsList.unshift(conversationSummary);
+      }
+      
+      await AsyncStorage.setItem('conversations_list', JSON.stringify(conversationsList));
+    } catch (error) {
+    }
+  };
+
+  // Cargar conversación desde AsyncStorage
+  const loadConversation = async (convId) => {
+    try {
+      const savedConversation = await AsyncStorage.getItem(`conversation_${convId}`);
+      if (savedConversation) {
+        const conversationData = JSON.parse(savedConversation);
+        return conversationData.messages || [];
+      } else {
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  };
 
   useEffect(() => {
     initializeChat();
+    
+    // Ejecutar diagnóstico para depuración
+    setTimeout(() => {
+      debugAsyncStorage();
+    }, 2000); // Esperar 2 segundos después de la inicialización
 
     // Listeners dinámicos para el teclado
     const keyboardDidShowListener = Keyboard.addListener(
@@ -58,32 +153,164 @@ export default function ChatScreen() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
+  // Guardado automático cuando cambian los mensajes
+  useEffect(() => {
+    if (messages.length > 0 && conversationId) {
+      autoSaveConversation(messages);
+    }
+  }, [messages, conversationId]);
+
+  // Monitoreo periódico de la conexión API
+  useEffect(() => {
+    let connectionInterval;
+    
+    const startConnectionMonitoring = () => {
+      // Verificación inicial
+      checkApiConnection();
+      
+      // Configurar intervalo basado en el estado actual
+      const setupInterval = (status) => {
+        const intervalTime = status === 'disconnected' ? 10000 : 30000; // 10s si está offline, 30s si está online
+        
+        connectionInterval = setInterval(() => {
+          checkApiConnection().then(isConnected => {
+            // Si el estado cambió, reconfigurar el intervalo
+            const currentStatus = isConnected ? 'connected' : 'disconnected';
+            if (currentStatus !== status) {
+              clearInterval(connectionInterval);
+              setupInterval(currentStatus);
+            }
+          });
+        }, intervalTime);
+      };
+      
+      // Comenzar con verificación más frecuente
+      setupInterval(apiStatus);
+    };
+    
+    // Solo iniciar el monitoreo si no estamos inicializando
+    if (!isInitializing) {
+      startConnectionMonitoring();
+    }
+    
+    return () => {
+      if (connectionInterval) {
+        clearInterval(connectionInterval);
+      }
+    };
+  }, [isInitializing, apiStatus]);
+
   const initializeChat = async () => {
     try {
-      // Crear nueva conversación
-      const conversationResult = await chatService.createConversation();
-      if (conversationResult.success) {
-        setConversationId(conversationResult.data.conversationId);
-      }
-
-      // Cargar historial o mensaje de bienvenida
-      const historyResult = await chatService.getConversationHistory();
-      if (historyResult.success && historyResult.data.length > 0) {
-        setMessages(historyResult.data);
+      // Usar una conversación persistente o crear una nueva
+      let persistentConversationId = await AsyncStorage.getItem('current_conversation_id');
+      
+      if (!persistentConversationId) {
+        // Crear nueva conversación si no existe
+        persistentConversationId = `chat_${Date.now()}`;
+        await AsyncStorage.setItem('current_conversation_id', persistentConversationId);
+        
+        // Agregar a la lista de conversaciones
+        await updateConversationsList(persistentConversationId);
       } else {
-        // Mensaje de bienvenida por defecto
-        setMessages([{
-          id: 1,
-          text: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?',
+      }
+      
+      setConversationId(persistentConversationId);
+
+      // Intentar cargar historial guardado
+      const savedMessages = await loadConversation(persistentConversationId);
+      
+      if (savedMessages.length > 0) {
+        // Si hay mensajes guardados, cargarlos
+        setMessages(savedMessages);
+      } else {
+        // Si no hay historial, mostrar mensaje de bienvenida
+        const welcomeMessage = {
+          id: generateUniqueId(),
+          text: 'Hello! I am your virtual assistant. How can I help you today?',
           isBot: true,
           timestamp: new Date()
-        }]);
+        };
+        setMessages([welcomeMessage]);
       }
+      
+      // Probar conexión con API en segundo plano (no bloquea la UI)
+      checkApiConnection();
+      
     } catch (error) {
-      console.error('Error initializing chat:', error);
-      Alert.alert('Error', 'No se pudo inicializar el chat. Inténtalo de nuevo.');
+      // No mostrar alert, solo mensaje de bienvenida básico
+      setMessages([{
+        id: generateUniqueId(),
+        text: 'Hello! I am your virtual assistant. How can I help you today?',
+        isBot: true,
+        timestamp: new Date()
+      }]);
+      setConversationId(`emergency_${Date.now()}`);
     } finally {
-      setIsLoading(false);
+      setIsInitializing(false);
+    }
+  };
+
+  // Actualizar lista de conversaciones
+  // Función de depuración para verificar AsyncStorage
+  const debugAsyncStorage = async () => {
+    try {
+      
+      // Verificar conversación actual
+      const currentConvId = await AsyncStorage.getItem('current_conversation_id');
+      
+      // Verificar lista de conversaciones
+      const conversationsList = await AsyncStorage.getItem('conversation_list');
+      if (conversationsList) {
+        const conversations = JSON.parse(conversationsList);
+        conversations.forEach((conv, index) => {
+        });
+      } else {
+      }
+      
+      // Verificar conversación específica
+      if (currentConvId) {
+        const convData = await AsyncStorage.getItem(`conversation_${currentConvId}`);
+        if (convData) {
+          const parsed = JSON.parse(convData);
+        } else {
+          
+        }
+      }
+      
+      // Verificar todas las claves en AsyncStorage
+      const allKeys = await AsyncStorage.getAllKeys();
+      
+    } catch (error) {
+    }
+  };
+
+  const updateConversationsList = async (convId) => {
+    try {
+      const conversationsList = await AsyncStorage.getItem('conversation_list');
+      let conversations = [];
+      
+      if (conversationsList) {
+        conversations = JSON.parse(conversationsList);
+      }
+      
+      // Verificar si la conversación ya existe en la lista
+      const existingConversation = conversations.find(conv => conv.id === convId);
+      
+      if (!existingConversation) {
+        // Agregar nueva conversación a la lista
+        const newConversation = {
+          id: convId,
+          title: `Conversación ${conversations.length + 1}`,
+          lastMessage: '',
+          timestamp: new Date().toISOString()
+        };
+        conversations.unshift(newConversation);
+        await AsyncStorage.setItem('conversation_list', JSON.stringify(conversations));
+      } else {
+      }
+      
+    } catch (error) {
     }
   };
 
@@ -97,7 +324,7 @@ export default function ChatScreen() {
 
     const messageText = validation.message;
     const userMessage = {
-      id: Date.now(),
+      id: generateUniqueId(),
       text: messageText,
       isBot: false,
       timestamp: new Date()
@@ -112,37 +339,48 @@ export default function ChatScreen() {
       // Enviar mensaje al chatbot
       const response = await chatService.sendMessage(messageText, conversationId);
       
+      // Con el nuevo sistema, siempre deberíamos recibir success: true
       if (response.success) {
+        // Actualizar estado de API basado en si es respuesta de error
+        if (response.data.isErrorResponse) {
+          setApiStatus('disconnected');
+        } else {
+          setApiStatus('connected');
+        }
+        
         const botMessage = {
-          id: response.data.id,
+          id: response.data.id || generateUniqueId(),
           text: response.data.text,
           isBot: true,
-          timestamp: response.data.timestamp
+          timestamp: new Date(response.data.timestamp || Date.now()),
+          isError: response.data.isErrorResponse || false
         };
         setMessages(prev => [...prev, botMessage]);
       } else {
-        // Si hay error pero tenemos respuesta de fallback
-        if (response.fallbackResponse && response.fallbackResponse.success) {
-          const fallbackMessage = {
-            id: response.fallbackResponse.data.id,
-            text: response.fallbackResponse.data.text,
-            isBot: true,
-            timestamp: response.fallbackResponse.data.timestamp
-          };
-          setMessages(prev => [...prev, fallbackMessage]);
-        } else {
-          throw new Error(response.error || 'Error desconocido');
-        }
+        // Este caso no debería ocurrir con el nuevo sistema, pero por seguridad
+        setApiStatus('disconnected');
+        
+        const errorMessage = {
+          id: generateUniqueId(),
+          text: "We're having a problem taking off 🚀 Something unexpected happened. Check your connection and try again.",
+          isBot: true,
+          timestamp: new Date(),
+          isError: true
+        };
+        setMessages(prev => [...prev, errorMessage]);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
-      const errorMessage = {
-        id: Date.now() + 1,
-        text: 'Lo siento, hubo un problema al procesar tu mensaje. Por favor, inténtalo de nuevo.',
+      // Este catch ahora solo maneja errores realmente críticos
+      setApiStatus('disconnected');
+      
+      const emergencyMessage = {
+        id: generateUniqueId(),
+        text: "We're having a problem taking off 🚀 Critical error. Check your connection and try again.",
         isBot: true,
-        timestamp: new Date()
+        timestamp: new Date(),
+        isError: true
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, emergencyMessage]);
     } finally {
       setIsTyping(false);
     }
@@ -152,17 +390,95 @@ export default function ChatScreen() {
     router.back();
   };
 
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  const handleClearConversation = () => {
+    Alert.alert(
+      'Delete Conversation',
+      'Are you sure you want to delete the entire conversation? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Eliminar de AsyncStorage
+              if (conversationId) {
+                await AsyncStorage.removeItem(`conversation_${conversationId}`);
+                
+                // Actualizar lista de conversaciones
+                const existingConversations = await AsyncStorage.getItem('conversations_list');
+                if (existingConversations) {
+                  let conversationsList = JSON.parse(existingConversations);
+                  conversationsList = conversationsList.filter(conv => conv.id !== conversationId);
+                  await AsyncStorage.setItem('conversations_list', JSON.stringify(conversationsList));
+                }
+              }
+              
+              // Resetear el chat
+              const newConversationId = `new_${Date.now()}`;
+              setConversationId(newConversationId);
+              setMessages([{
+                id: generateUniqueId(),
+                text: 'Hello! I am your virtual assistant. How can I help you today?',
+                isBot: true,
+                timestamp: new Date()
+              }]);
+              
+              setShowMenu(false);
+            } catch (error) {
+              Alert.alert('Error', 'Could not delete the conversation completely.');
+            }
+          }
+        }
+      ]
+    );
   };
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.loadingContainer, { backgroundColor: colors.background.primary }]}>
-        <Text style={[styles.loadingText, { color: colors.text.secondary }]}>Cargando chat...</Text>
-      </View>
-    );
-  }
+  // Función para obtener estadísticas de conversaciones guardadas
+  const getConversationStats = async () => {
+    try {
+      const conversationsList = await AsyncStorage.getItem('conversations_list');
+      if (conversationsList) {
+        const conversations = JSON.parse(conversationsList);
+        console.log(`📊 Total de conversaciones guardadas: ${conversations.length}`);
+        return conversations.length;
+      }
+      return 0;
+    } catch (error) {
+      console.error('Error obteniendo estadísticas:', error);
+      return 0;
+    }
+  };
+
+  const formatTime = (date) => {
+    try {
+      // Verificar si date es válido
+      if (!date) {
+        return new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      // Si date es un string, convertirlo a Date
+      if (typeof date === 'string') {
+        date = new Date(date);
+      }
+      
+      // Si date es un número (timestamp), convertirlo a Date
+      if (typeof date === 'number') {
+        date = new Date(date);
+      }
+      
+      // Verificar si es una fecha válida
+      if (isNaN(date.getTime())) {
+        return new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      }
+      
+      return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    } catch (error) {
+      console.error('Error formateando fecha:', error);
+      // Retornar hora actual como fallback
+      return new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
@@ -172,12 +488,34 @@ export default function ChatScreen() {
           <ArrowLeft size={24} color={colors.text.primary} strokeWidth={2} />
         </TouchableOpacity>
         <View style={styles.headerContent}>
-          <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Asistente Virtual</Text>
-          <Text style={[styles.headerSubtitle, { color: colors.text.secondary }]}>En línea</Text>
+          
+          <View style={styles.headerTextContainer}>
+            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Virtual Assistant</Text>
+            <View style={styles.statusContainer}>
+              <View style={[
+                styles.statusDot, 
+                { backgroundColor: 
+                  isInitializing ? colors.text.tertiary :
+                  apiStatus === 'connected' ? colors.status.success :
+                  apiStatus === 'disconnected' ? colors.status.error :
+                  colors.text.tertiary
+                }
+              ]} />
+              <Text style={[styles.headerSubtitle, { color: colors.text.secondary }]}>
+                {isInitializing ? 'Starting...' :
+                 apiStatus === 'connected' ? 'Online' : 
+                 apiStatus === 'disconnected' ? 'Offline' : 
+                 'Connecting...'}
+              </Text>
+            </View>
+          </View>
         </View>
-        <View style={[styles.botAvatar, { backgroundColor: colors.primary + '15' }]}>
-          <Bot size={24} color={colors.primary} strokeWidth={2} />
-        </View>
+        <TouchableOpacity 
+          style={styles.menuButton} 
+          onPress={() => setShowMenu(true)}
+        >
+          <MoreVertical size={24} color={colors.text.primary} strokeWidth={2} />
+        </TouchableOpacity>
       </View>
 
       {/* Chat Container */}
@@ -275,10 +613,9 @@ export default function ChatScreen() {
               { 
                 backgroundColor: colors.background.tertiary,
                 color: colors.text.primary,
-                borderColor: colors.border.medium
               }
             ]}
-            placeholder="Escribe un mensaje..."
+            placeholder="Type a message..."
             placeholderTextColor={colors.text.tertiary}
             value={inputText}
             onChangeText={setInputText}
@@ -303,6 +640,28 @@ export default function ChatScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Menú de opciones - Dropdown */}
+      {showMenu && (
+        <TouchableOpacity 
+          style={styles.menuOverlay} 
+          activeOpacity={1} 
+          onPress={() => setShowMenu(false)}
+        >
+          <View style={[styles.dropdownMenu, { backgroundColor: colors.background.card }]}>
+            <TouchableOpacity 
+              style={[styles.dropdownItem, { backgroundColor: 'transparent' }]} 
+              onPress={handleClearConversation}
+              activeOpacity={0.7}
+            >
+              <Trash2 size={18} color={colors.status.error} strokeWidth={2} />
+              <Text style={[styles.dropdownText, { color: colors.status.error }]}>
+                Delete Conversation
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -310,14 +669,6 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  loadingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 16,
-    fontWeight: '500',
   },
   header: {
     flexDirection: 'row',
@@ -332,6 +683,14 @@ const styles = StyleSheet.create({
   },
   headerContent: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    marginRight: 8,
   },
   headerTitle: {
     fontSize: 18,
@@ -340,6 +699,21 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 12,
     marginTop: 2,
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 6,
+  },
+  menuButton: {
+    padding: 8,
+    marginLeft: 8,
   },
   botAvatar: {
     width: 40,
@@ -434,7 +808,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     maxHeight: 100,
     marginRight: 8,
-    borderWidth: 1,
   },
   sendButton: {
     width: 40,
@@ -442,5 +815,41 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  menuOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 60,
+    right: 15,
+    minWidth: 180,
+    borderRadius: 10,
+    paddingVertical: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.08)',
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 6,
+    marginHorizontal: 4,
+  },
+  dropdownText: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 10,
   },
 });

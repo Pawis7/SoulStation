@@ -1,163 +1,133 @@
 // Servicio de Chat para manejar la comunicación con la API del chatbot
-import { apiService } from './api';
-
 export class ChatService {
   constructor() {
-    this.baseUrl = '/chat'; // Configurar según tu API
-    this.isConnected = false;
+    this.baseUrl = 'http://10.213.43.179:8000'; // URL base de tu API
+    this.isConnected = true;
   }
 
-  // Enviar mensaje al chatbot
+  // Enviar pregunta al chatbot
   async sendMessage(message, conversationId = null) {
     try {
-      const payload = {
-        message: message.trim(),
-        conversationId,
-        timestamp: new Date().toISOString(),
-      };
+      // Crear AbortController para timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundos de timeout
+      
+      try {
+        const response = await fetch(`${this.baseUrl}/ask`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question: message.trim()
+          }),
+          signal: controller.signal,
+        });
 
-      // Por ahora simulamos la respuesta, reemplazar con llamada real a la API
-      if (process.env.NODE_ENV === 'development' || !this.isConnected) {
-        return this.simulateResponse(message);
-      }
+        clearTimeout(timeoutId);
 
-      const response = await apiService.post(`${this.baseUrl}/send`, payload);
-      return {
-        success: true,
-        data: {
-          id: response.id,
-          text: response.message,
-          timestamp: new Date(response.timestamp),
-          conversationId: response.conversationId,
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
         }
-      };
-    } catch (error) {
-      console.error('Error sending message:', error);
-      return {
-        success: false,
-        error: 'No se pudo enviar el mensaje. Inténtalo de nuevo.',
-        fallbackResponse: this.simulateResponse(message)
-      };
-    }
-  }
 
-  // Obtener historial de conversación
-  async getConversationHistory(conversationId) {
-    try {
-      if (process.env.NODE_ENV === 'development' || !this.isConnected) {
-        return this.getMockHistory();
-      }
-
-      const response = await apiService.get(`${this.baseUrl}/conversation/${conversationId}`);
-      return {
-        success: true,
-        data: response.messages.map(msg => ({
-          id: msg.id,
-          text: msg.content,
-          isBot: msg.sender === 'bot',
-          timestamp: new Date(msg.timestamp),
-        }))
-      };
-    } catch (error) {
-      console.error('Error fetching conversation:', error);
-      return {
-        success: false,
-        error: 'No se pudo cargar el historial.',
-        data: this.getMockHistory().data
-      };
-    }
-  }
-
-  // Crear nueva conversación
-  async createConversation() {
-    try {
-      if (process.env.NODE_ENV === 'development' || !this.isConnected) {
+        const data = await response.json();
+        
+        // Marcar como conectado si la respuesta es exitosa
+        this.isConnected = true;
+        
         return {
           success: true,
-          data: { conversationId: `mock_${Date.now()}` }
+          data: {
+            id: data.id || Date.now(),
+            text: data.answer || data.response || data.message || data.text,
+            timestamp: new Date(data.timestamp || Date.now()),
+            conversationId: conversationId,
+            isErrorResponse: false
+          }
         };
-      }
-
-      const response = await apiService.post(`${this.baseUrl}/conversation`);
-      return {
-        success: true,
-        data: { conversationId: response.id }
-      };
-    } catch (error) {
-      console.error('Error creating conversation:', error);
-      return {
-        success: false,
-        error: 'No se pudo crear la conversación.',
-        data: { conversationId: `fallback_${Date.now()}` }
-      };
-    }
-  }
-
-  // Simulador de respuestas para desarrollo
-  simulateResponse(userMessage) {
-    const responses = {
-      // Respuestas específicas basadas en palabras clave
-      'hola': '¡Hola! ¿En qué puedo ayudarte hoy?',
-      'ayuda': 'Estoy aquí para ayudarte. ¿Qué necesitas saber?',
-      'gracias': '¡De nada! ¿Hay algo más en lo que pueda ayudarte?',
-      'adiós': '¡Hasta luego! No dudes en volver si necesitas ayuda.',
-      'perfil': 'Puedes editar tu perfil desde la sección de configuración.',
-      'configuración': 'En configuración puedes cambiar el tema, notificaciones y más.',
-      'tema': 'Puedes cambiar el tema de la aplicación en configuración > Tema.',
-      'notificaciones': 'Las notificaciones se pueden gestionar desde configuración.',
-      // Respuestas generales
-      default: [
-        'Entiendo tu pregunta. Déjame ayudarte con eso.',
-        '¡Excelente pregunta! Aquí está mi respuesta...',
-        'Claro, puedo ayudarte con eso.',
-        'Esa es una buena observación. Te explico...',
-        'Permíteme buscar la mejor respuesta para ti.',
-        'Interesante punto. Aquí tienes mi sugerencia...'
-      ]
-    };
-
-    // Buscar respuesta específica
-    const lowerMessage = userMessage.toLowerCase();
-    for (const [keyword, response] of Object.entries(responses)) {
-      if (keyword !== 'default' && lowerMessage.includes(keyword)) {
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        
+        // Marcar como desconectado
+        this.isConnected = false;
+        
+        // Determinar tipo de error
+        let errorMessage = "We're having a problem taking off 🚀 I can't connect to the server right now. Check your internet connection and try again.";
+        
+        if (fetchError.name === 'AbortError') {
+          errorMessage = "We're having a problem taking off 🚀 The server is taking too long to respond. Try again in a moment.";
+        } else if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('Network request failed')) {
+          errorMessage = "We're having a problem taking off 🚀 No internet connection detected. Check your connection and try again.";
+        }
+        
         return {
           success: true,
           data: {
             id: Date.now(),
-            text: response,
+            text: errorMessage,
             timestamp: new Date(),
+            conversationId: conversationId,
+            isErrorResponse: true
           }
         };
       }
+      
+    } catch (error) {
+      // Marcar como desconectado
+      this.isConnected = false;
+      
+      // Respuesta de emergencia
+      return {
+        success: true,
+        data: {
+          id: Date.now(),
+          text: "We're having a problem taking off 🚀 Something critical went wrong. Check your connection and try again.",
+          timestamp: new Date(),
+          conversationId: conversationId,
+          isErrorResponse: true
+        }
+      };
     }
-
-    // Respuesta aleatoria por defecto
-    const defaultResponses = responses.default;
-    const randomResponse = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-    
-    return {
-      success: true,
-      data: {
-        id: Date.now(),
-        text: randomResponse,
-        timestamp: new Date(),
-      }
-    };
   }
 
-  // Historial mock para desarrollo
-  getMockHistory() {
-    return {
-      success: true,
-      data: [
-        {
-          id: 1,
-          text: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?',
-          isBot: true,
-          timestamp: new Date(Date.now() - 60000) // 1 minuto atrás
-        }
-      ]
-    };
+  // Probar conexión con la API
+  async testConnection() {
+    try {
+      // Crear AbortController para timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos de timeout
+      
+      const response = await fetch(`${this.baseUrl}/`, {
+        method: 'GET',
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        this.isConnected = true;
+        return { success: true, message: 'Connection successful' };
+      } else {
+        throw new Error(`HTTP ${response.status}`);
+      }
+    } catch (error) {
+      this.isConnected = false;
+      
+      let friendlyMessage = 'Could not connect to server';
+      if (error.name === 'AbortError') {
+        friendlyMessage = 'Connection timeout';
+      } else if (error.message.includes('Failed to fetch') || error.message.includes('Network request failed')) {
+        friendlyMessage = 'No internet connection';
+      } else if (error.message.includes('timeout')) {
+        friendlyMessage = 'Connection timeout';
+      }
+      
+      return { 
+        success: false, 
+        error: friendlyMessage,
+        details: error.message 
+      };
+    }
   }
 
   // Configurar conexión con la API
@@ -165,19 +135,24 @@ export class ChatService {
     this.isConnected = connected;
   }
 
+  // Cambiar URL base de la API
+  setBaseUrl(url) {
+    this.baseUrl = url;
+  }
+
   // Validar mensaje antes de enviar
   validateMessage(message) {
     if (!message || typeof message !== 'string') {
-      return { isValid: false, error: 'El mensaje debe ser un texto válido.' };
+      return { isValid: false, error: 'Message must be valid text.' };
     }
 
     const trimmed = message.trim();
     if (trimmed.length === 0) {
-      return { isValid: false, error: 'El mensaje no puede estar vacío.' };
+      return { isValid: false, error: 'Message cannot be empty.' };
     }
 
     if (trimmed.length > 1000) {
-      return { isValid: false, error: 'El mensaje es demasiado largo (máximo 1000 caracteres).' };
+      return { isValid: false, error: 'Message is too long (maximum 1000 characters).' };
     }
 
     return { isValid: true, message: trimmed };

@@ -3,16 +3,16 @@ export const THEME_PALETTES = {
   light: {
     id: 'light',
     name: 'Claro',
-    description: 'Tema claro minimalista',
+    description: 'Tema claro personalizado',
     colors: {
-      // Colores principales
-      primary: '#2563eb',
-      secondary: '#059669',
-      accent: '#dc2626',
+      // Colores principales - Nueva paleta personalizada
+      primary: '#9759EB',        // Púrpura principal
+      secondary: '#63F0D8',      // Turquesa
+      accent: '#8FCBFF',         // Azul medio
       
       // Colores de texto
       text: {
-        primary: '#111827',
+        primary: '#000000',      // Negro principal
         secondary: '#4b5563',
         tertiary: '#6b7280',
         disabled: '#9ca3af',
@@ -21,32 +21,32 @@ export const THEME_PALETTES = {
       // Colores de fondo
       background: {
         primary: '#ffffff',
-        secondary: '#f9fafb',
+        secondary: '#f9fafb',     // Azul claro como fondo secundario
         tertiary: '#f3f4f6',
         card: '#ffffff',
       },
       
       // Colores de estado
       status: {
-        success: '#059669',
-        warning: '#d97706',
+        success: '#63F0D8',      // Turquesa para éxito
+        warning: '#deb24b',      // Amarillo para advertencias
         error: '#dc2626',
-        info: '#2563eb',
+        info: '#9759EB',         // Púrpura para información
       },
       
       // Colores de borde
       border: {
-        light: '#f3f4f6',
-        medium: '#e5e7eb',
-        dark: '#d1d5db',
+        light: '#D6E7F8',        // Azul claro para bordes suaves
+        medium: '#8FCBFF',       // Azul medio para bordes normales
+        dark: '#9759EB',         // Púrpura para bordes destacados
       },
       
       // Colores específicos de navegación
       navigation: {
-        active: '#2563eb',
+        active: '#9759EB',       // Púrpura para elementos activos
         inactive: '#6b7280',
         background: '#ffffff',
-        border: '#f3f4f6',
+        border: '#D6E7F8',       // Azul claro para bordes de navegación
       },
     }
   },
@@ -59,7 +59,7 @@ export const THEME_PALETTES = {
       // Colores principales
       primary: '#374151',
       secondary: '#6b7280',
-      accent: '#f59e0b',
+      accent: '#81a19f',
       
       // Colores de texto
       text: {
@@ -110,7 +110,7 @@ export const THEME_PALETTES = {
       // Colores principales
       primary: '#3b82f6',
       secondary: '#10b981',
-      accent: '#f59e0b',
+      accent: '#d95dd7',
       
       // Colores de texto
       text: {

@@ -24,32 +24,33 @@ import {
   LogOut,
   TrendingUp,
   Sparkles,
+  House,
 } from 'lucide-react-native';
 
 // Configuración de pestañas de navegación
 export const TAB_SCREENS = [
   {
     name: 'index',
-    title: 'Inicio',
-    icon: Home,
+    title: 'Home',
+    icon: House,
     options: {
-      title: 'Inicio',
+      title: 'Home',
     },
   },
   {
     name: 'profile',
-    title: 'Perfil',
+    title: 'Profile',
     icon: User,
     options: {
-      title: 'Perfil',
+      title: 'Profile',
     },
   },
   {
     name: 'notifications',
-    title: 'Notifs',
+    title: 'Notifications',
     icon: Bell,
     options: {
-      title: 'Notifs',
+      title: 'Notifications',
     },
   },
 ];
@@ -96,12 +97,12 @@ export const ICONS = {
 export const MOCK_DATA = {
   user: {
     id: '1',
-    name: 'Juan Díaz',
-    email: 'juan.diaz@ejemplo.com',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
     avatar: 'JD',
-    location: 'Madrid, España',
-    memberSince: 'Enero 2023',
-    phone: '+34 123 456 789',
+    location: 'New York, USA',
+    memberSince: 'January 2023',
+    phone: '+1 123 456 789',
     stats: {
       projects: 12,
       completed: 8,
@@ -110,10 +111,10 @@ export const MOCK_DATA = {
   },
   
   quickActions: [
-    { id: 1, icon: 'Sparkles', label: 'Nuevo', color: '#3b82f6' },
-    { id: 2, icon: 'TrendingUp', label: 'Tendencias', color: '#10b981' },
-    { id: 3, icon: 'Users', label: 'Comunidad', color: '#8b5cf6' },
-    { id: 4, icon: 'Zap', label: 'Rápido', color: '#f59e0b' },
+    { id: 1, icon: 'Sparkles', label: 'New', color: '#3b82f6' },
+    { id: 2, icon: 'TrendingUp', label: 'Trending', color: '#10b981' },
+    { id: 3, icon: 'Users', label: 'Community', color: '#8b5cf6' },
+    { id: 4, icon: 'Zap', label: 'Quick', color: '#f59e0b' },
   ],
   
   notifications: [
@@ -122,9 +123,9 @@ export const MOCK_DATA = {
       type: 'message',
       icon: 'MessageCircle',
       color: '#3b82f6',
-      title: 'Nuevo mensaje',
-      description: 'Has recibido un mensaje de María García',
-      time: 'Hace 5 min',
+      title: 'New message',
+      description: 'You have received a message from Maria Garcia',
+      time: '5 min ago',
       isNew: true,
     },
     {
@@ -132,9 +133,9 @@ export const MOCK_DATA = {
       type: 'team',
       icon: 'Users',
       color: '#10b981',
-      title: 'Actualización del equipo',
-      description: 'Tu equipo ha completado el proyecto "App Mobile"',
-      time: 'Hace 1 hora',
+      title: 'Team update',
+      description: 'Your team has completed the "Mobile App" project',
+      time: '1 hour ago',
       isNew: true,
     },
   ],

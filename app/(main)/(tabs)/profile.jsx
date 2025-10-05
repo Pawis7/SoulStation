@@ -8,14 +8,14 @@ export default function Profile() {
   const colors = currentTheme.colors;
 
   const profileStats = [
-    { label: 'Proyectos', value: '12' },
-    { label: 'Completados', value: '8' },
-    { label: 'En progreso', value: '4' },
+    { label: 'Projects', value: '12' },
+    { label: 'Completed', value: '8' },
+    { label: 'In Progress', value: '4' },
   ];
 
   const profileActions = [
-    { id: 1, icon: Edit3, label: 'Editar perfil', color: colors.primary },
-    { id: 2, icon: Bot, label: 'Chat IA', color: colors.secondary },
+    { id: 1, icon: Edit3, label: 'Edit Profile', color: colors.primary },
+    { id: 2, icon: Bot, label: 'AI Chat', color: colors.secondary },
   ];
 
   const handleSettingsPress = () => {
@@ -40,7 +40,7 @@ export default function Profile() {
     <View style={[styles.container, { backgroundColor: colors.background.secondary }]}>
       <View style={[styles.header, { backgroundColor: colors.background.card, borderBottomColor: colors.border.light }]}>
         <View style={styles.headerContent}>
-          <Text style={[styles.username, { color: colors.text.primary }]}>Juan Díaz</Text>
+          <Text style={[styles.username, { color: colors.text.primary }]}>John Doe</Text>
           <View style={styles.headerIcons}>
             <TouchableOpacity 
               style={[styles.headerIcon, { backgroundColor: colors.background.tertiary }]}
@@ -72,7 +72,7 @@ export default function Profile() {
 
         {/* Información personal */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Información personal</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Personal Information</Text>
           <View style={[styles.infoCard, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
             <View style={[styles.infoItem, { borderBottomColor: colors.border.light }]}>
               <View style={[styles.infoIcon, { backgroundColor: colors.background.tertiary }]}>
@@ -80,7 +80,7 @@ export default function Profile() {
               </View>
               <View style={styles.infoContent}>
                 <Text style={[styles.infoLabel, { color: colors.text.tertiary }]}>Email</Text>
-                <Text style={[styles.infoValue, { color: colors.text.primary }]}>juan.diaz@ejemplo.com</Text>
+                <Text style={[styles.infoValue, { color: colors.text.primary }]}>john.doe@example.com</Text>
               </View>
             </View>
             
@@ -89,8 +89,8 @@ export default function Profile() {
                 <Phone size={18} color={colors.text.secondary} strokeWidth={2} />
               </View>
               <View style={styles.infoContent}>
-                <Text style={[styles.infoLabel, { color: colors.text.tertiary }]}>Teléfono</Text>
-                <Text style={[styles.infoValue, { color: colors.text.primary }]}>+34 123 456 789</Text>
+                <Text style={[styles.infoLabel, { color: colors.text.tertiary }]}>Phone</Text>
+                <Text style={[styles.infoValue, { color: colors.text.primary }]}>+1 123 456 789</Text>
               </View>
             </View>
             
@@ -99,8 +99,8 @@ export default function Profile() {
                 <Calendar size={18} color={colors.text.secondary} strokeWidth={2} />
               </View>
               <View style={styles.infoContent}>
-                <Text style={[styles.infoLabel, { color: colors.text.tertiary }]}>Miembro desde</Text>
-                <Text style={[styles.infoValue, { color: colors.text.primary }]}>Enero 2023</Text>
+                <Text style={[styles.infoLabel, { color: colors.text.tertiary }]}>Member since</Text>
+                <Text style={[styles.infoValue, { color: colors.text.primary }]}>January 2023</Text>
               </View>
             </View>
           </View>
@@ -108,7 +108,7 @@ export default function Profile() {
 
         {/* Acciones rápidas */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Acciones rápidas</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
             {profileActions.map((action) => (
               <TouchableOpacity
