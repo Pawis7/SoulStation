@@ -1,148 +1,302 @@
-# NasApp
+# SoulStation
 
-Una aplicación móvil moderna y escalable construida con Expo Router y React Native.
+A modern and scalable mobile application built with Expo Router and React Native, featuring a comprehensive wellness platform with mental health support, physical health tracking, and personal moments capture.
 
-## 🏗️ Estructura del Proyecto
+## 🚀 Quick Start
+
+### Prerequisites
+
+This project requires **Yarn** package manager. You can use npm at your own risk, but Yarn is recommended for compatibility.
+
+> **Note**: If you choose to use npm instead of Yarn, replace `yarn` commands with `npm` equivalents:
+> - `yarn install` → `npm install`
+> - `yarn dev` → `npm run dev`
+> 
+> ⚠️ **Warning**: Using npm may cause dependency conflicts or version mismatches.
+
+### Installation & Setup
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/Pawis7/nasapp.git
+cd nasapp
+```
+
+2. **Install dependencies:**
+```bash
+yarn install
+```
+
+3. **Start the development server:**
+```bash
+yarn dev
+```
+
+### Running the App
+
+After running `yarn dev`, you'll see a QR code in your terminal.
+
+#### Scan QR Code with Expo Go
+1. **Install Expo Go** on your mobile device:
+   - [iOS App Store](https://apps.apple.com/app/expo-go/id982107779)
+   - [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+
+2. **Scan the QR code:**
+   - **iOS**: Use the Camera app to scan the QR code
+   - **Android**: Use the Expo Go app to scan the QR code
+
+3. **The app will load** on your device automatically
+
+#### Alternative Options
+- Press **'w'** for web browser
+- Press **'a'** for Android emulator (requires Android Studio)
+- Press **'i'** for iOS simulator (requires Xcode - macOS only)
+
+## 🏗️ Project Structure
 
 ```
 nasapp/
-├── app/                          # Estructura de navegación (Expo Router)
-│   ├── (main)/                   # Grupo de rutas principales
-│   │   ├── (tabs)/              # Navegación por pestañas
-│   │   │   ├── index.jsx        # Pantalla de inicio
-│   │   │   ├── profile.jsx      # Pantalla de perfil
-│   │   │   ├── notifications.jsx # Pantalla de notificaciones
-│   │   │   ├── settings.jsx     # Pantalla de configuración
-│   │   │   ├── help.jsx         # Pantalla de ayuda
-│   │   │   └── _layout.jsx      # Layout de pestañas
-│   │   └── _layout.jsx          # Layout principal
-│   ├── index.jsx                # Pantalla de bienvenida
-│   ├── login.jsx                # Pantalla de login
-│   ├── register.jsx             # Pantalla de registro
-│   └── _layout.jsx              # Layout raíz
-├── src/                          # Código fuente modular
-│   ├── constants/               # Constantes de la aplicación
-│   │   ├── theme.js            # Tema, colores, tipografía
-│   │   └── navigation.js       # Configuración de navegación
-│   ├── config/                  # Configuración de la app
-│   │   └── app.js              # Configuración principal
-│   ├── services/               # Servicios externos
-│   │   └── api.js             # Cliente API
-│   ├── types/                  # Tipos TypeScript
-│   │   └── index.ts           # Definiciones de tipos
-│   ├── utils/                  # Utilidades generales
-│   │   └── helpers.js         # Funciones auxiliares
-│   └── index.js               # Exportaciones principales
-├── components/                  # Componentes reutilizables
-│   ├── ui/                     # Componentes de interfaz
-│   │   └── index.js           # Button, Card, Avatar, etc.
-│   └── screens/               # Componentes específicos de pantallas
-├── hooks/                      # Hooks personalizados
-│   ├── useFrameworkReady.js   # Hook de inicialización
-│   └── useTabBarConfig.js     # Hook de configuración de tabs
-└── assets/                     # Recursos estáticos
-    └── images/                # Imágenes e iconos
+├── app/                          # Navigation structure (Expo Router)
+│   ├── (main)/                   # Main route group
+│   │   ├── (tabs)/              # Tab navigation
+│   │   │   ├── index.jsx        # Home screen
+│   │   │   ├── profile.jsx      # Profile screen
+│   │   │   ├── notifications.jsx # Notifications screen
+│   │   │   └── _layout.jsx      # Tab layout
+│   │   ├── mental/              # Mental health module
+│   │   │   ├── index.jsx        # Mental health hub
+│   │   │   ├── chat-room.jsx    # 1-on-1 chat interface
+│   │   │   ├── personal-chat.jsx # Personal journal
+│   │   │   └── saved-chats.jsx  # Saved conversations
+│   │   ├── health/              # Physical health module
+│   │   │   └── physical.jsx     # Physical health dashboard
+│   │   ├── moments/             # Moments capture module
+│   │   │   └── index.jsx        # Moments feed
+│   │   ├── chatBot/             # AI chat assistant
+│   │   ├── games/               # Mental wellness games
+│   │   └── _layout.jsx          # Main layout
+│   ├── index.jsx                # Welcome screen
+│   ├── login.jsx                # Login screen
+│   ├── register.jsx             # Registration screen
+│   └── _layout.jsx              # Root layout
+├── src/                          # Modular source code
+│   ├── constants/               # App constants
+│   │   ├── theme.js            # Themes, colors, typography
+│   │   ├── themes.js           # Planetary theme system
+│   │   └── navigation.js       # Navigation configuration
+│   ├── context/                 # React contexts
+│   │   └── ThemeContext.jsx    # Theme management
+│   ├── services/               # External services
+│   │   └── api.js             # API client
+│   └── utils/                  # General utilities
+│       └── helpers.js         # Helper functions
+├── components/                  # Reusable components
+│   ├── ui/                     # UI components
+│   └── screens/               # Screen-specific components
+├── hooks/                      # Custom hooks
+└── assets/                     # Static resources
+    └── images/                # Images and icons
 ```
 
-## 🚀 Características
+## 🌟 Features
 
-### Arquitectura Modular
-- **Separación de responsabilidades**: Código organizado por funcionalidad
-- **Reutilización de componentes**: Componentes UI modulares y configurables
-- **Configuración centralizada**: Tema, colores y constantes en archivos dedicados
-- **Servicios abstraídos**: API y servicios externos bien estructurados
+### Mental Health Module
+- **Personal Journal Chat**: Private space for thoughts and reflections
+- **1-on-1 Professional Support**: Chat with licensed therapists and counselors
+- **Daily Inspiration**: Motivational quotes for mental wellness
+- **Saved Conversations**: Access to chat history and important conversations
+- **Resource Center**: Mental health resources and crisis support information
 
-### Diseño Responsivo
-- **Adaptable a diferentes tamaños**: Dimensiones dinámicas basadas en pantalla
-- **Sistema de diseño consistente**: Tema unificado con colores, tipografía y espaciado
-- **Componentes flexibles**: UI que se adapta automáticamente
+### Physical Health Tracking
+- **Vital Signs Monitoring**: Heart rate, blood oxygen, temperature, weight, blood pressure
+- **Exercise Library**: Organized by muscle groups (Chest, Back, Legs, Arms, Core, Cardio)
+- **Progress Tracking**: Monitor fitness goals and achievements
+- **Quick Actions**: Set goals, view progress, start timers
 
-### Navegación Escalable
-- **Configuración declarativa**: Pestañas definidas en archivos de configuración
-- **Fácil de extender**: Agregar nuevas pantallas modificando solo la configuración
-- **Hooks personalizados**: Lógica de navegación reutilizable
+### Moments Capture
+- **Photo & Note Moments**: Capture life's beautiful moments
+- **Mood Tracking**: Associate emotions with your memories
+- **Advanced Filtering**: Filter by photos, notes, favorites, or mood
+- **Grid & List Views**: Flexible viewing options
+- **Social Features**: Like, comment, and share moments
 
-## 🎨 Sistema de Diseño
+### AI Chat Assistant
+- **Intelligent Conversations**: AI-powered chat for support and guidance
+- **Personality Options**: Choose from different AI personalities
+- **Voice Messages**: Support for audio interactions
+- **Chat History**: Persistent conversation storage
 
-### Colores
+### Wellness Games
+- **Mental Training**: Brain games for cognitive wellness
+- **Sudoku**: Classic puzzle game for mental stimulation
+- **Memory Games**: Enhance cognitive function through play
+
+### Comprehensive Theme System
+- **6 Planetary Themes**: Earth, Mars, Venus, Jupiter, Neptune, Saturn
+- **Dynamic Color Schemes**: Each theme with carefully crafted color palettes
+- **Consistent Design**: Unified UI/UX across all modules
+- **Accessibility**: High contrast options and readable typography
+
+## 🎨 Design System
+
+### Planetary Theme System
+The app features 6 unique themes inspired by planets:
+
 ```javascript
-import { Colors } from './src/constants/theme';
+// Earth Theme (Default)
+colors: {
+  primary: '#2ECC71',
+  secondary: '#3498DB',
+  accent: '#E74C3C',
+  // ... more colors
+}
 
-// Usar colores del sistema
-backgroundColor: Colors.primary
-color: Colors.text.secondary
+// Mars Theme
+colors: {
+  primary: '#E74C3C',
+  secondary: '#C0392B',
+  accent: '#F39C12',
+  // ... more colors
+}
 ```
 
-### Componentes UI
+### Component Usage
 ```javascript
-import { Card, Button, Avatar } from './components/ui';
+import { useTheme } from '../src/context/ThemeContext';
 
-// Componentes configurables
-<Button variant="primary" size="large" />
-<Card onPress={handlePress} />
-<Avatar text="JD" size="large" />
+const { currentTheme } = useTheme();
+const colors = currentTheme.colors;
+
+// Use theme colors
+<View style={{ backgroundColor: colors.background.card }}>
+  <Text style={{ color: colors.text.primary }}>Hello World</Text>
+</View>
 ```
 
-### Utilidades
-```javascript
-import { formatTimeAgo, validateEmail } from './src/utils/helpers';
-
-// Funciones auxiliares
-const timeString = formatTimeAgo(date);
-const isValid = validateEmail(email);
-```
-
-## 📱 Pantallas
-
-- **Inicio**: Dashboard principal con acciones rápidas
-- **Perfil**: Información personal y estadísticas
-- **Notificaciones**: Centro de notificaciones con estado
-- **Configuración**: Preferencias y configuración de la app
-- **Ayuda**: FAQ, contacto y soporte
-
-## 🛠️ Comandos
+## 🛠️ Available Scripts
 
 ```bash
-# Desarrollo
+# Start development server and scan QR code
 yarn dev
 
-# Construcción web
-yarn build:web
-
-# Linting
-yarn lint
-
-# Verificación de tipos
-yarn typecheck
+# Alternative commands (if needed)
+yarn start        # Same as yarn dev
+yarn web         # Run on web browser directly
+yarn android     # Run on Android (requires setup)
+yarn ios         # Run on iOS (requires setup - macOS only)
 ```
 
-## 🔧 Configuración
+## 📱 Supported Platforms
 
-### Variables de entorno
-Crea un archivo `.env` con:
+- ✅ **Android** (API level 21+)
+- ✅ **iOS** (iOS 11.0+)
+- ✅ **Web** (Modern browsers)
+
+## 🔧 Configuration
+
+### Environment Variables
+Create a `.env` file in the root directory:
+```env
+EXPO_PUBLIC_API_URL=https://your-api-url.com
+EXPO_PUBLIC_APP_NAME=NasApp
 ```
-EXPO_PUBLIC_API_URL=https://api.tusitio.com
+
+### Theme Customization
+Modify themes in `src/constants/themes.js`:
+```javascript
+export const themes = {
+  earth: {
+    name: 'Earth',
+    colors: {
+      primary: '#2ECC71',
+      // ... customize colors
+    }
+  }
+};
 ```
 
-### Personalizar tema
-Modifica `src/constants/theme.js` para cambiar colores, tipografía y espaciado.
+## 📦 Key Dependencies
 
-### Agregar nuevas pantallas
-1. Crea el archivo de pantalla en `app/(main)/(tabs)/`
-2. Añade la configuración en `src/constants/navigation.js`
-3. El sistema las cargará automáticamente
+```json
+{
+  "expo": "~54.0.10",
+  "expo-router": "~6.0.8",
+  "react-native": "0.76.1",
+  "react": "18.3.1",
+  "expo-image-picker": "latest",
+  "@react-native-async-storage/async-storage": "latest",
+  "lucide-react-native": "latest"
+}
+```
 
-## 📦 Dependencias Principales
+## 🚨 Troubleshooting
 
-- **Expo Router**: Navegación basada en archivos
-- **React Native**: Framework móvil
-- **Lucide React Native**: Iconos modernos
-- **React Navigation**: Sistema de navegación
+### Common Issues
 
-## 🎯 Beneficios de la Estructura Modular
+**Metro bundler issues:**
+```bash
+yarn start --clear
+# or
+npx expo start --clear
+```
 
-1. **Mantenibilidad**: Código organizado y fácil de mantener
-2. **Escalabilidad**: Agregar funcionalidades sin afectar código existente
-3. **Reutilización**: Componentes y utilidades reutilizables
-4. **Consistencia**: Sistema de diseño unificado
-5. **Desarrollo eficiente**: Configuración centralizada y declarativa
+**Android build issues:**
+```bash
+cd android
+./gradlew clean
+cd ..
+yarn android
+```
+
+**iOS build issues (macOS):**
+```bash
+cd ios
+pod install
+cd ..
+yarn ios
+```
+
+**Permission issues (Android):**
+- Enable "Developer options" and "USB debugging" on your Android device
+- Accept the USB debugging dialog when connecting your device
+
+**Expo Go not connecting:**
+- Ensure your computer and mobile device are on the same WiFi network
+- Try using the tunnel connection: `expo start --tunnel`
+
+### Performance Tips
+
+1. **Use physical devices** for better performance than simulators
+2. **Enable Hermes** (already configured in this project)
+3. **Clear Metro cache** if experiencing bundling issues
+4. **Close unnecessary apps** when testing on device
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue on GitHub
+- Check the [Expo documentation](https://docs.expo.dev/)
+- Visit [React Native documentation](https://reactnative.dev/)
+
+## 🙏 Acknowledgments
+
+- Built with [Expo](https://expo.dev/)
+- Icons by [Lucide](https://lucide.dev/)
+- Inspired by modern wellness applications
+- Planetary theme concept for mental wellness
+
+---
+
+**Happy Coding! 🚀**

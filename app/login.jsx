@@ -52,6 +52,7 @@ export default function LoginScreen() {
 
           <Text style={styles.title}>Welcome</Text>
           <Text style={styles.subtitle}>Start your space journey</Text>
+          <Text style={styles.subtitle}>Credential isn't necessary, just press login</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -83,7 +84,7 @@ export default function LoginScreen() {
               end={{ x: 1, y: 1 }}
               style={styles.buttonGradient}
             >
-              <Text style={styles.loginButtonText}>Log In</Text>
+              <Text style={styles.loginButtonText}>Log In (bypassed Launch)</Text>
             </LinearGradient>
           </TouchableOpacity>
 
