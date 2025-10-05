@@ -17,19 +17,19 @@ export default function SettingsScreen() {
 
   const settingsSections = [
     {
-      title: 'Cuenta',
+      title: 'Account',
       items: [
-        { id: 1, icon: User, label: 'Perfil', hasArrow: true },
-        { id: 2, icon: Lock, label: 'Privacidad y seguridad', hasArrow: true },
+        { id: 1, icon: User, label: 'Profile', hasArrow: true },
+        { id: 2, icon: Lock, label: 'Privacy and Security', hasArrow: true },
       ],
     },
     {
-      title: 'Preferencias',
+      title: 'Preferences',
       items: [
         {
           id: 3,
           icon: Bell,
-          label: 'Notificaciones',
+          label: 'Notifications',
           hasSwitch: true,
           value: notificationsEnabled,
           onToggle: setNotificationsEnabled
@@ -37,18 +37,18 @@ export default function SettingsScreen() {
         {
           id: 4,
           icon: Palette,
-          label: 'Tema de la aplicación',
+          label: 'App Theme',
           subtitle: currentTheme.name,
           hasArrow: true,
           onPress: () => setThemeModalVisible(true)
         },
-        { id: 5, icon: Globe, label: 'Idioma', subtitle: 'Español', hasArrow: true },
+        { id: 5, icon: Globe, label: 'Language', subtitle: 'English', hasArrow: true },
       ],
     },
     {
-      title: 'Soporte',
+      title: 'Support',
       items: [
-        { id: 6, icon: HelpCircle, label: 'Ayuda y soporte', hasArrow: true },
+        { id: 6, icon: HelpCircle, label: 'Help and Support', hasArrow: true },
       ],
     },
   ];
@@ -60,7 +60,7 @@ export default function SettingsScreen() {
         <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
           <ArrowLeft size={24} color={colors.text.primary} strokeWidth={2} />
         </TouchableOpacity>
-        <Text style={[styles.navTitle, { color: colors.text.primary }]}>Ajustes</Text>
+        <Text style={[styles.navTitle, { color: colors.text.primary }]}>Settings</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -114,7 +114,7 @@ export default function SettingsScreen() {
 
         <View style={styles.logoutSection}>
           <TouchableOpacity style={[styles.logoutButton, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]} activeOpacity={0.7}>
-            <Text style={[styles.logoutText, { color: colors.status.error }]}>Cerrar sesión</Text>
+            <Text style={[styles.logoutText, { color: colors.status.error }]}>Sign Out</Text>
           </TouchableOpacity>
         </View>
 

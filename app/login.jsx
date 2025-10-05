@@ -50,8 +50,8 @@ export default function LoginScreen() {
         <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
           <View style={styles.glowCircle} />
 
-          <Text style={styles.title}>Bienvenido</Text>
-          <Text style={styles.subtitle}>Inicia tu viaje espacial</Text>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.subtitle}>Start your space journey</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -83,7 +83,7 @@ export default function LoginScreen() {
               end={{ x: 1, y: 1 }}
               style={styles.buttonGradient}
             >
-              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+              <Text style={styles.loginButtonText}>Log In</Text>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -91,7 +91,7 @@ export default function LoginScreen() {
             style={styles.createAccountButton}
             onPress={() => router.push('/register')}
           >
-            <Text style={styles.createAccountText}>Crear Cuenta</Text>
+            <Text style={styles.createAccountText}>Create Account</Text>
           </TouchableOpacity>
         </Animated.View>
       </KeyboardAvoidingView>

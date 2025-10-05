@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   Keyboard,
   Dimensions,
   Image
@@ -318,7 +317,7 @@ export default function ChatScreen() {
     // Validar mensaje
     const validation = chatService.validateMessage(inputText);
     if (!validation.isValid) {
-      Alert.alert('Error', validation.error);
+      // Silently return without showing alert
       return;
     }
 
@@ -390,48 +389,36 @@ export default function ChatScreen() {
     router.back();
   };
 
-  const handleClearConversation = () => {
-    Alert.alert(
-      'Delete Conversation',
-      'Are you sure you want to delete the entire conversation? This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              // Eliminar de AsyncStorage
-              if (conversationId) {
-                await AsyncStorage.removeItem(`conversation_${conversationId}`);
-                
-                // Actualizar lista de conversaciones
-                const existingConversations = await AsyncStorage.getItem('conversations_list');
-                if (existingConversations) {
-                  let conversationsList = JSON.parse(existingConversations);
-                  conversationsList = conversationsList.filter(conv => conv.id !== conversationId);
-                  await AsyncStorage.setItem('conversations_list', JSON.stringify(conversationsList));
-                }
-              }
-              
-              // Resetear el chat
-              const newConversationId = `new_${Date.now()}`;
-              setConversationId(newConversationId);
-              setMessages([{
-                id: generateUniqueId(),
-                text: 'Hello! I am your virtual assistant. How can I help you today?',
-                isBot: true,
-                timestamp: new Date()
-              }]);
-              
-              setShowMenu(false);
-            } catch (error) {
-              Alert.alert('Error', 'Could not delete the conversation completely.');
-            }
-          }
+  const handleClearConversation = async () => {
+    // Clear conversation directly without confirmation alert
+    try {
+      // Eliminar de AsyncStorage
+      if (conversationId) {
+        await AsyncStorage.removeItem(`conversation_${conversationId}`);
+        
+        // Actualizar lista de conversaciones
+        const existingConversations = await AsyncStorage.getItem('conversations_list');
+        if (existingConversations) {
+          let conversationsList = JSON.parse(existingConversations);
+          conversationsList = conversationsList.filter(conv => conv.id !== conversationId);
+          await AsyncStorage.setItem('conversations_list', JSON.stringify(conversationsList));
         }
-      ]
-    );
+      }
+      
+      // Resetear el chat
+      const newConversationId = `new_${Date.now()}`;
+      setConversationId(newConversationId);
+      setMessages([{
+        id: generateUniqueId(),
+        text: 'Hello! I am your virtual assistant. How can I help you today?',
+        isBot: true,
+        timestamp: new Date()
+      }]);
+      
+      setShowMenu(false);
+    } catch (error) {
+      console.error('Error clearing conversation:', error);
+    }
   };
 
   // Función para obtener estadísticas de conversaciones guardadas

@@ -128,7 +128,7 @@ const ThemeSelector = ({ visible, onClose }) => {
           <View style={styles.headerContent}>
             <Palette size={24} color={colors.primary} />
             <Text style={[styles.title, { color: colors.text.primary }]}>
-              Seleccionar Tema
+              Select Theme
             </Text>
           </View>
           <TouchableOpacity
@@ -136,7 +136,7 @@ const ThemeSelector = ({ visible, onClose }) => {
             onPress={onClose}
           >
             <Text style={[styles.closeButtonText, { color: colors.text.primary }]}>
-              Cerrar
+              Close
             </Text>
           </TouchableOpacity>
         </View>

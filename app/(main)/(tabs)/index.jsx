@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { TrendingUp, Users, Bot, Cross, Dumbbell } from 'lucide-react-native';
+import { TrendingUp, Users, Bot, Cross, Dumbbell, Brain, Camera } from 'lucide-react-native';
 import { useTheme } from '../../../src/context/ThemeContext';
 import { router } from 'expo-router';
 
@@ -11,37 +11,37 @@ export default function MainScreen() {
     { id: 1, icon: Cross, label: 'Mental Health', color: colors.primary },
     { id: 2, icon: Dumbbell, label: 'Physical Health', color: colors.secondary },
     { id: 3, icon: Bot, label: 'Wotteo, Your Virtual Friend', color: colors.status.warning },
-    { id: 4, icon: Users, label: 'Moments', color: colors.accent }
+    { id: 4, icon: Camera, label: 'Moments', color: colors.status.error }
   ];
 
   const extraCards = [
     { 
       id: 1, 
-      icon: Cross, 
-      title: 'Mental Health', 
-      subtitle: 'Updated 2 hours ago',
-      color: colors.primary 
+      icon: Brain, 
+      title: 'Mind Games', 
+      subtitle: 'Train your brain',
+      color: colors.accent 
     },
     { 
       id: 2, 
-      icon: TrendingUp, 
-      title: 'Statistics', 
-      subtitle: 'Updated 5 hours ago',
-      color: colors.secondary 
-    },
-    { 
-      id: 3, 
       icon: Bot, 
       title: 'ChatBot', 
       subtitle: 'Updated 5 hours ago',
       color: colors.status.warning 
     },
+    
   ];
 
   const handleActionPress = (actionId) => {
     switch (actionId) {
+      case 2:
+        router.push('/(main)/health/physical');
+        break;
       case 3:
         router.push('/(main)/chatBot');
+        break;
+      case 4:
+        router.push('/(main)/moments');
         break;
       default:
         // Manejar otras acciones
@@ -52,11 +52,13 @@ export default function MainScreen() {
   const handleExtraCardPress = (cardId) => {
     switch (cardId) {
       case 1:
+        router.push('/(main)/games');
         break;
-      case 3:
+      case 2:
         router.push('/(main)/chatBot');
         break;
-      default:
+      case 1:
+        router.push('/(main)/games');
         break;
     }
   };
@@ -150,11 +152,12 @@ const styles = StyleSheet.create({
   actionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -6,
+    justifyContent: 'space-between',
+    marginHorizontal: -4,
   },
   actionCard: {
-    width: '50%',
-    paddingHorizontal: 6,
+    width: '48%',
+    paddingHorizontal: 4,
     marginBottom: 12,
     shadowRadius: 2,
     borderRadius: 12,

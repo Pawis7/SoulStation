@@ -56,13 +56,13 @@ export default function RegisterScreen() {
           <Animated.View style={[styles.formContainer, { opacity: fadeAnim }]}>
             <View style={styles.glowCircle} />
 
-            <Text style={styles.title}>Crear Cuenta</Text>
-            <Text style={styles.subtitle}>Únete a la aventura</Text>
+            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.subtitle}>Join the adventure</Text>
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Nombre"
+                placeholder="Name"
                 placeholderTextColor="#8b9dc3"
                 value={name}
                 onChangeText={setName}
@@ -84,7 +84,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Contraseña"
+                placeholder="Password"
                 placeholderTextColor="#8b9dc3"
                 value={password}
                 onChangeText={setPassword}
@@ -95,7 +95,7 @@ export default function RegisterScreen() {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
-                placeholder="Confirmar Contraseña"
+                placeholder="Confirm Password"
                 placeholderTextColor="#8b9dc3"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
@@ -110,7 +110,7 @@ export default function RegisterScreen() {
                 end={{ x: 1, y: 1 }}
                 style={styles.buttonGradient}
               >
-                <Text style={styles.registerButtonText}>Registrarse</Text>
+                <Text style={styles.registerButtonText}>Register</Text>
               </LinearGradient>
             </TouchableOpacity>
 
@@ -118,7 +118,7 @@ export default function RegisterScreen() {
               style={styles.backButton}
               onPress={() => router.back()}
             >
-              <Text style={styles.backText}>Ya tengo cuenta</Text>
+              <Text style={styles.backText}>I already have an account</Text>
             </TouchableOpacity>
           </Animated.View>
         </ScrollView>

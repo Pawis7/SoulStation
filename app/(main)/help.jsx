@@ -17,8 +17,8 @@ export default function Help() {
     {
       id: 1,
       icon: MessageCircle,
-      title: 'Chat en vivo',
-      description: 'Respuesta inmediata',
+      title: 'Live Chat',
+      description: 'Immediate response',
       color: colors.primary,
       available: true,
     },
@@ -26,14 +26,14 @@ export default function Help() {
       id: 2,
       icon: Mail,
       title: 'Email',
-      description: 'soporte@nasapp.com',
+      description: 'support@nasapp.com',
       color: colors.status.success,
       available: true,
     },
     {
       id: 3,
       icon: Phone,
-      title: 'Teléfono',
+      title: 'Phone',
       description: '+34 900 123 456',
       color: colors.status.warning,
       available: false,
@@ -43,36 +43,36 @@ export default function Help() {
   const faqItems = [
     {
       id: 1,
-      question: '¿Cómo puedo cambiar mi contraseña?',
-      answer: 'Ve a Ajustes > Privacidad y seguridad > Cambiar contraseña. Ingresa tu contraseña actual y la nueva contraseña dos veces.',
+      question: 'How can I change my password?',
+      answer: 'Go to Settings > Privacy and Security > Change Password. Enter your current password and the new password twice.',
     },
     {
       id: 2,
-      question: '¿Cómo sincronizo mis datos?',
-      answer: 'Los datos se sincronizan automáticamente cuando tienes conexión a internet. También puedes forzar la sincronización desde el menú de configuración.',
+      question: 'How do I sync my data?',
+      answer: 'Data syncs automatically when you have an internet connection. You can also force sync from the settings menu.',
     },
     {
       id: 3,
-      question: '¿Puedo usar la app sin conexión?',
-      answer: 'Sí, muchas funciones están disponibles sin conexión. Los cambios se sincronizarán cuando recuperes la conexión.',
+      question: 'Can I use the app without connection?',
+      answer: 'Yes, many features are available offline. Changes will sync when you regain connection.',
     },
     {
       id: 4,
-      question: '¿Cómo elimino mi cuenta?',
-      answer: 'Ve a Ajustes > Privacidad y seguridad > Eliminar cuenta. Ten en cuenta que esta acción es irreversible.',
+      question: 'How do I delete my account?',
+      answer: 'Go to Settings > Privacy and Security > Delete Account. Note that this action is irreversible.',
     },
     {
       id: 5,
-      question: '¿Hay límite en el número de proyectos?',
-      answer: 'No hay límite en el número de proyectos que puedes crear. Sin embargo, algunos planes pueden tener limitaciones en el almacenamiento.',
+      question: 'Is there a limit on the number of projects?',
+      answer: 'There is no limit on the number of projects you can create. However, some plans may have storage limitations.',
     },
   ];
 
   const quickLinks = [
-    { id: 1, title: 'Guía de inicio rápido', icon: ExternalLink },
-    { id: 2, title: 'Términos de servicio', icon: ExternalLink },
-    { id: 3, title: 'Política de privacidad', icon: ExternalLink },
-    { id: 4, title: 'Estado del servicio', icon: ExternalLink },
+    { id: 1, title: 'Quick Start Guide', icon: ExternalLink },
+    { id: 2, title: 'Terms of Service', icon: ExternalLink },
+    { id: 3, title: 'Privacy Policy', icon: ExternalLink },
+    { id: 4, title: 'Service Status', icon: ExternalLink },
   ];
 
   const toggleFaq = (id) => {
@@ -86,7 +86,7 @@ export default function Help() {
         <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
           <ArrowLeft size={24} color={colors.text.primary} strokeWidth={2} />
         </TouchableOpacity>
-        <Text style={[styles.navTitle, { color: colors.text.primary }]}>Centro de ayuda</Text>
+        <Text style={[styles.navTitle, { color: colors.text.primary }]}>Help Center</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -95,13 +95,13 @@ export default function Help() {
         <View style={styles.searchContainer}>
           <TouchableOpacity style={[styles.searchBar, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
             <Search size={20} color={colors.text.tertiary} strokeWidth={2} />
-            <Text style={[styles.searchPlaceholder, { color: colors.text.tertiary }]}>Buscar en la ayuda...</Text>
+            <Text style={[styles.searchPlaceholder, { color: colors.text.tertiary }]}>Search help...</Text>
           </TouchableOpacity>
         </View>
 
         {/* Opciones de contacto */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Contacta con nosotros</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Contact Us</Text>
           <View style={styles.contactGrid}>
             {contactOptions.map((option) => (
               <TouchableOpacity
@@ -133,7 +133,7 @@ export default function Help() {
                   {option.description}
                 </Text>
                 {!option.available && (
-                  <Text style={[styles.unavailableText, { color: colors.status.error }]}>No disponible</Text>
+                  <Text style={[styles.unavailableText, { color: colors.status.error }]}>Not available</Text>
                 )}
               </TouchableOpacity>
             ))}
@@ -142,7 +142,7 @@ export default function Help() {
 
         {/* FAQ */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Preguntas frecuentes</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Frequently Asked Questions</Text>
           <View style={[styles.faqContainer, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
             {faqItems.map((item) => (
               <View key={item.id} style={[styles.faqItem, { borderBottomColor: colors.border.light }]}>
@@ -174,7 +174,7 @@ export default function Help() {
 
         {/* Enlaces rápidos */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Enlaces útiles</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Useful Links</Text>
           <View style={[styles.linksContainer, { backgroundColor: colors.background.card, shadowColor: colors.text.primary }]}>
             {quickLinks.map((link) => (
               <TouchableOpacity
