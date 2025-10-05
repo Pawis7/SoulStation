@@ -1,7 +1,7 @@
 // Servicio de Chat para manejar la comunicación con la API del chatbot
 export class ChatService {
   constructor() {
-    this.baseUrl = 'http://10.213.43.179:8000'; // URL base de tu API
+    this.baseUrl = 'https://api-gemini-2lev.onrender.com'; // URL base de tu API
     this.isConnected = true;
   }
 
@@ -10,7 +10,7 @@ export class ChatService {
     try {
       // Crear AbortController para timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundos de timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos de timeout
       
       try {
         const response = await fetch(`${this.baseUrl}/ask`, {

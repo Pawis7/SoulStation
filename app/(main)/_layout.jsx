@@ -31,6 +31,27 @@ export default function MainLayout() {
               headerShown: false,
             }}
           />
+          <Stack.Screen
+            name="settings"
+            options={{
+              headerShown: false,
+              presentation: 'card',
+            }}
+          />
+          <Stack.Screen
+            name="help"
+            options={{
+              headerShown: false,
+              presentation: 'card',
+            }}
+          />
+          <Stack.Screen
+            name="mental"
+            options={{
+              headerShown: false,
+              presentation: 'card',
+            }}
+          />
         </Stack>
       </View>
     </SafeAreaView>

@@ -56,6 +56,9 @@ export default function TabLayout() {
             tabBarIcon: ({ color, size }) => (
               <screen.icon size={size} color={color} strokeWidth={2.5} />
             ),
+            ...(screen.name === 'profile' && {
+              presentation: 'card',
+            }),
             ...screen.options,
           }}
         />

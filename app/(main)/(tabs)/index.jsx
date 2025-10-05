@@ -34,6 +34,9 @@ export default function MainScreen() {
 
   const handleActionPress = (actionId) => {
     switch (actionId) {
+      case 1:
+        router.push('/(main)/mental');
+        break;
       case 2:
         router.push('/(main)/health/physical');
         break;

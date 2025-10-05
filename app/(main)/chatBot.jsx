@@ -226,7 +226,7 @@ export default function ChatScreen() {
         // Si no hay historial, mostrar mensaje de bienvenida
         const welcomeMessage = {
           id: generateUniqueId(),
-          text: 'Hello! I am your virtual assistant. How can I help you today?',
+          text: 'Hello! I am Wotteo, your virtual assistant. How can I help you today?',
           isBot: true,
           timestamp: new Date()
         };
@@ -240,7 +240,7 @@ export default function ChatScreen() {
       // No mostrar alert, solo mensaje de bienvenida básico
       setMessages([{
         id: generateUniqueId(),
-        text: 'Hello! I am your virtual assistant. How can I help you today?',
+        text: 'Hello! I am Wotteo, your virtual assistant. How can I help you today?',
         isBot: true,
         timestamp: new Date()
       }]);
@@ -477,7 +477,7 @@ export default function ChatScreen() {
         <View style={styles.headerContent}>
           
           <View style={styles.headerTextContainer}>
-            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Virtual Assistant</Text>
+            <Text style={[styles.headerTitle, { color: colors.text.primary }]}>Wotteo, Virtual Assistant</Text>
             <View style={styles.statusContainer}>
               <View style={[
                 styles.statusDot, 
