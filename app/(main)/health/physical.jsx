@@ -173,7 +173,6 @@ export default function PhysicalHealth() {
 
   const handleExercisePress = (exercise, groupName) => {
     // Navigate to exercise detail instead of showing alert
-    console.log('Exercise selected:', exercise.name, 'from group:', groupName);
     // Could navigate to exercise detail screen here
   };
 
@@ -182,7 +181,6 @@ export default function PhysicalHealth() {
       style={[styles.vitalCard, { backgroundColor: colors.background.card }]}
       onPress={() => {
         // Handle vital sign tap - could navigate to detail view
-        console.log('Vital sign tapped:', title, data);
       }}
       activeOpacity={0.7}
     >
