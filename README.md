@@ -18,8 +18,8 @@ This project requires **Yarn** package manager. You can use npm at your own risk
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/Pawis7/nasapp.git
-cd nasapp
+git clone https://github.com/Pawis7/SoulStation.git
+cd SoulStation
 ```
 
 2. **Install dependencies:**
@@ -55,7 +55,7 @@ After running `yarn dev`, you'll see a QR code in your terminal.
 ## 🏗️ Project Structure
 
 ```
-nasapp/
+SoulStation/
 ├── app/                          # Navigation structure (Expo Router)
 │   ├── (main)/                   # Main route group
 │   │   ├── (tabs)/              # Tab navigation
@@ -198,7 +198,7 @@ yarn ios         # Run on iOS (requires setup - macOS only)
 Create a `.env` file in the root directory:
 ```env
 EXPO_PUBLIC_API_URL=https://your-api-url.com
-EXPO_PUBLIC_APP_NAME=NasApp
+EXPO_PUBLIC_APP_NAME=SoulStation
 ```
 
 ### Theme Customization
