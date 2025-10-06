@@ -1,6 +1,17 @@
 # SoulStation
 
-A modern and scalable mobile application built with Expo Router and React Native, featuring a comprehensive wellness platform with mental health support, physical health tracking, and personal moments capture.
+Mobile application built with Expo Router and React Native, featuring a comprehensive wellness platform with mental health and physical support, health tracking, and personal moments capture.
+
+The ChatBot API repository `(can’t be in the same repo due to compatibility with hosting).`:
+https://github.com/Leonardosep13/SoulStation_Chatbot
+
+You can try the online demo **(limited to 3 minutes per session)** here:
+https://appetize.io/app/android/com.pawis.SoulStation?device=pixel8pro&osVersion=15.0&toolbar=true
+
+Or download the APK `(signed with my own Google key — meaning no third-party signatures are involved. In other words, it’s a safe download)`:
+https://drive.google.com/file/d/1GNNGIlNQIb4t4S-NEc-1v9L7BgEVt-Id/view?usp=sharing
+
+Or you can run it local with **Expo go**:
 
 ## 🚀 Quick Start
 
