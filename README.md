@@ -6,7 +6,7 @@ The ChatBot API repository `(can’t be in the same repo due to compatibility wi
 https://github.com/Leonardosep13/SoulStation_Chatbot
 
 You can try the online demo **(limited to 3 minutes per session)** here:
-https://appetize.io/app/android/com.pawis.SoulStation?device=pixel8pro&osVersion=15.0&toolbar=true
+https://appetize.io/app/b_sguc3535on6dyuw7o6sfgvrt3a
 
 Or download the APK `(signed with my own Google key — meaning no third-party signatures are involved. In other words, it’s a safe download)`:
 https://drive.google.com/file/d/1GNNGIlNQIb4t4S-NEc-1v9L7BgEVt-Id/view?usp=sharing
