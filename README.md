@@ -121,20 +121,14 @@ SoulStation/
 ### Physical Health Tracking
 - **Vital Signs Monitoring**: Heart rate, blood oxygen, temperature, weight, blood pressure
 - **Exercise Library**: Organized by muscle groups (Chest, Back, Legs, Arms, Core, Cardio)
-- **Progress Tracking**: Monitor fitness goals and achievements
-- **Quick Actions**: Set goals, view progress, start timers
 
 ### Moments Capture
 - **Photo & Note Moments**: Capture life's beautiful moments
-- **Mood Tracking**: Associate emotions with your memories
 - **Advanced Filtering**: Filter by photos, notes, favorites, or mood
 - **Grid & List Views**: Flexible viewing options
-- **Social Features**: Like, comment, and share moments
 
 ### AI Chat Assistant
 - **Intelligent Conversations**: AI-powered chat for support and guidance
-- **Personality Options**: Choose from different AI personalities
-- **Voice Messages**: Support for audio interactions
 - **Chat History**: Persistent conversation storage
 
 ### Wellness Games
@@ -147,10 +141,6 @@ SoulStation/
 - **Dynamic Color Schemes**: Each theme with carefully crafted color palettes
 - **Consistent Design**: Unified UI/UX across all modules
 - **Accessibility**: High contrast options and readable typography
-
-## 🎨 Design System
-
-
 
 ## 🛠️ Available Scripts
 
