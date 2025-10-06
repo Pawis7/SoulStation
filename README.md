@@ -190,7 +190,7 @@ npx expo start --clear
 
 ## 📄 License
 
-This project is licensed under a CC0 1.0 Universal — see the [LICENSE](https://creativecommons.org/publicdomain/zero/1.0/deed.en) file for details.
+This project is licensed under a CC0 1.0 Universal — see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
