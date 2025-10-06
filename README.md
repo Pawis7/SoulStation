@@ -150,39 +150,7 @@ SoulStation/
 
 ## 🎨 Design System
 
-### Planetary Theme System
-The app features 6 unique themes inspired by planets:
 
-```javascript
-// Earth Theme (Default)
-colors: {
-  primary: '#2ECC71',
-  secondary: '#3498DB',
-  accent: '#E74C3C',
-  // ... more colors
-}
-
-// Mars Theme
-colors: {
-  primary: '#E74C3C',
-  secondary: '#C0392B',
-  accent: '#F39C12',
-  // ... more colors
-}
-```
-
-### Component Usage
-```javascript
-import { useTheme } from '../src/context/ThemeContext';
-
-const { currentTheme } = useTheme();
-const colors = currentTheme.colors;
-
-// Use theme colors
-<View style={{ backgroundColor: colors.background.card }}>
-  <Text style={{ color: colors.text.primary }}>Hello World</Text>
-</View>
-```
 
 ## 🛠️ Available Scripts
 
@@ -197,50 +165,11 @@ yarn android     # Run on Android (requires setup)
 yarn ios         # Run on iOS (requires setup - macOS only)
 ```
 
-## 📱 Supported Platforms
+## 📱 Supported Platforms FOR DEVELOPING
 
 - ✅ **Android** (API level 21+)
 - ✅ **iOS** (iOS 11.0+)
 - ✅ **Web** (Modern browsers)
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file in the root directory:
-```env
-EXPO_PUBLIC_API_URL=https://your-api-url.com
-EXPO_PUBLIC_APP_NAME=SoulStation
-```
-
-### Theme Customization
-Modify themes in `src/constants/themes.js`:
-```javascript
-export const themes = {
-  earth: {
-    name: 'Earth',
-    colors: {
-      primary: '#2ECC71',
-      // ... customize colors
-    }
-  }
-};
-```
-
-## 📦 Key Dependencies
-
-```json
-{
-  "expo": "~54.0.10",
-  "expo-router": "~6.0.8",
-  "react-native": "0.76.1",
-  "react": "18.3.1",
-  "expo-image-picker": "latest",
-  "@react-native-async-storage/async-storage": "latest",
-  "lucide-react-native": "latest"
-}
-```
-
-## 🚨 Troubleshooting
 
 ### Common Issues
 
@@ -250,37 +179,6 @@ yarn start --clear
 # or
 npx expo start --clear
 ```
-
-**Android build issues:**
-```bash
-cd android
-./gradlew clean
-cd ..
-yarn android
-```
-
-**iOS build issues (macOS):**
-```bash
-cd ios
-pod install
-cd ..
-yarn ios
-```
-
-**Permission issues (Android):**
-- Enable "Developer options" and "USB debugging" on your Android device
-- Accept the USB debugging dialog when connecting your device
-
-**Expo Go not connecting:**
-- Ensure your computer and mobile device are on the same WiFi network
-- Try using the tunnel connection: `expo start --tunnel`
-
-### Performance Tips
-
-1. **Use physical devices** for better performance than simulators
-2. **Enable Hermes** (already configured in this project)
-3. **Clear Metro cache** if experiencing bundling issues
-4. **Close unnecessary apps** when testing on device
 
 ## 🤝 Contributing
 
@@ -292,7 +190,7 @@ yarn ios
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under a modified Creative Commons Attribution-NonCommercial-ShareAlike 4.0 License — see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
